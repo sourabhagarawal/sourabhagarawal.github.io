@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sourabh Agrawal — Director of Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       CSS Custom Properties — Dark / Light Theming
+    ========================================================= */
+    :root {
+      --accent: #38bdf8;
+      --accent-dim: #0ea5e9;
+      --accent-glow: rgba(56,189,248,.15);
+
+      --bg-0: #0a0f1e;
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --bg-3: #273548;
+
+      --text-primary: #f0f6ff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+
+      --border: rgba(56,189,248,.12);
+      --border-strong: rgba(56,189,248,.25);
+
+      --card-bg: #131c2e;
+      --card-border: rgba(56,189,248,.1);
+      --card-hover-border: rgba(56,189,248,.35);
+
+      --nav-bg: rgba(10,15,30,.88);
+      --shadow-card: 0 4px 24px rgba(0,0,0,.4);
+      --shadow-glow: 0 0 40px rgba(56,189,248,.08);
+
+      --timeline-line: #1e3a5f;
+      --pill-bg: rgba(56,189,248,.1);
+      --pill-text: #7dd3fc;
+      --pill-border: rgba(56,189,248,.2);
+
+      --stat-bg: rgba(56,189,248,.06);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="light"] {
+      --bg-0: #f8fafc;
+      --bg-1: #f1f5f9;
+      --bg-2: #e2e8f0;
+      --bg-3: #cbd5e1;
+
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --border: rgba(14,165,233,.15);
+      --border-strong: rgba(14,165,233,.3);
+
+      --card-bg: #ffffff;
+      --card-border: rgba(14,165,233,.12);
+      --card-hover-border: rgba(14,165,233,.4);
+
+      --nav-bg: rgba(248,250,252,.92);
+      --shadow-card: 0 4px 24px rgba(0,0,0,.08);
+      --shadow-glow: 0 0 40px rgba(14,165,233,.06);
+
+      --timeline-line: #bae6fd;
+      --pill-bg: #e0f2fe;
+      --pill-text: #0284c7;
+      --pill-border: #bae6fd;
+
+      --stat-bg: #e0f2fe;
+      --accent: #0284c7;
+      --accent-dim: #0369a1;
+      --accent-glow: rgba(14,165,233,.12);
+    }
+
+    /* =========================================================
+       Reset & Base
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-0);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background var(--transition), color var(--transition);
+    }
+    a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--accent-dim); }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* =========================================================
+       Scroll-fade Animations
+    ========================================================= */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+    .fade-up.delay-5 { transition-delay: 0.5s; }
+
+    /* =========================================================
+       Navbar
+    ========================================================= */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #theme-toggle {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      transition: color var(--transition), background var(--transition);
+      font-size: 1.1rem;
+    }
+    #theme-toggle:hover {
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+      border-radius: 8px;
+      transition: background var(--transition);
+    }
+    .hamburger:hover { background: var(--accent-glow); }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--text-secondary);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    #mobile-menu {
+      display: none;
+      flex-direction: column;
+      padding: 12px 24px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+    }
+    #mobile-menu.open { display: flex; }
+    #mobile-menu a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color var(--transition);
+    }
+    #mobile-menu a:hover { color: var(--accent); }
+
+    /* =========================================================
+       Section Base
+    ========================================================= */
+    section {
+      padding: 96px 24px;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 620px;
+      line-height: 1.7;
+    }
+    .section-divider {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      border-radius: 2px;
+      margin-bottom: 56px;
+    }
+
+    /* =========================================================
+       Hero
+    ========================================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(56,189,248,.12) 0%, transparent 60%),
+        var(--bg-0);
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2338bdf8' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--accent-glow);
+      border: 1px solid var(--border-strong);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .hero-name .accent { color: var(--accent); }
+    .hero-title {
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      margin-bottom: 28px;
+    }
+    .hero-title strong { color: var(--accent); font-weight: 600; }
+    .hero-summary {
+      font-size: clamp(1rem, 1.8vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.75;
+      margin-bottom: 44px;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0f1e;
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      color: #0a0f1e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(56,189,248,.3);
+    }
+    .btn-outline {
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      background: transparent;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+      transform: translateY(-2px);
+    }
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 72px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-metric {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-metric-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .hero-metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* =========================================================
+       About
+    ========================================================= */
+    #about {
+      background: var(--bg-1);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .about-text p:last-child { margin-bottom: 0; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .stat-card {
+      background: var(--stat-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .stat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .stat-number {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .skills-cloud {
+      margin-top: 48px;
+    }
+    .skills-cloud-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      padding: 5px 12px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--pill-text);
+      transition: all var(--transition);
+      cursor: default;
+    }
+    .tag:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       Selected Work
+    ========================================================= */
+    #work { background: var(--bg-0); }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .work-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .work-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .work-card:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+    .work-card:hover::before { opacity: 1; }
+    .work-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .work-company-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .work-company {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .work-dates {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .work-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .work-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .work-impact {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--accent-glow);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .work-impact-icon { font-size: 1rem; }
+    .work-impact-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .work-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .work-tag {
+      padding: 3px 10px;
+      background: var(--bg-2);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* =========================================================
+       Timeline
+    ========================================================= */
+    #timeline { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--timeline-line), transparent);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 48px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -47px; top: 6px;
+      width: 14px; height: 14px;
+      background: var(--bg-0);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      transition: background var(--transition);
+    }
+    .timeline-item:hover .timeline-dot { background: var(--accent); }
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .timeline-company {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .timeline-dates {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 2px 10px;
+      background: var(--bg-2);
+      border-radius: 100px;
+    }
+    .timeline-type {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .type-work { background: rgba(56,189,248,.1); color: #7dd3fc; }
+    .type-edu { background: rgba(167,139,250,.1); color: #c4b5fd; }
+    .timeline-role {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .timeline-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 680px;
+    }
+    .timeline-highlights {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .timeline-highlight {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .timeline-highlight::before {
+      content: '→';
+      color: var(--accent);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       Skills
+    ========================================================= */
+    #skills { background: var(--bg-0); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .skill-group {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .skill-group:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-2px);
+    }
+    .skill-group-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .skill-group-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    /* =========================================================
+       Certifications
+    ========================================================= */
+    #certifications { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .cert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all var(--transition);
+    }
+    .cert-card:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+    .cert-num {
+      width: 40px; height: 40px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-glow);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .cert-info { flex: 1; }
+    .cert-name {
+      font-size: 0.975rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .cert-issuer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .cert-issuer strong { color: var(--accent); }
+
+    /* =========================================================
+       Contact
+    ========================================================= */
+    #contact { background: var(--bg-0); }
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .contact-intro p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .open-to {
+      margin-top: 24px;
+      padding: 18px 20px;
+      background: var(--accent-glow);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+    }
+    .open-to-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .open-to ul {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .open-to ul li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .open-to ul li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      transition: all var(--transition);
+    }
+    .contact-card:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      transform: translateX(4px);
+    }
+    .contact-card-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-2);
+      border-radius: 10px;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .contact-card-info { flex: 1; }
+    .contact-card-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .contact-card-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .contact-card-arrow {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      transition: transform var(--transition), color var(--transition);
+    }
+    .contact-card:hover .contact-card-arrow {
+      transform: translateX(4px);
+      color: var(--accent);
+    }
+
+    /* =========================================================
+       Footer
+    ========================================================= */
+    footer {
+      background: var(--bg-1);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .footer-location {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* =========================================================
+       Responsive
+    ========================================================= */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 72px 20px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .work-grid { grid-template-columns: 1fr; }
+      .hero-metrics { gap: 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hero-name { font-size: 2.8rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* =========================================================
+       Counter animation
+    ========================================================= */
+    .count-up { display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">Sourabh<span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#certifications">Certs</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#work" class="mobile-link">Work</a>
+      <a href="#timeline" class="mobile-link">Timeline</a>
+      <a href="#skills" class="mobile-link">Skills</a>
+      <a href="#certifications" class="mobile-link">Certs</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+    <div class="hero-inner">
+<h1 class="hero-name fade-up delay-1">
+        Sourabh<br><span class="accent">Agrawal</span>
+      </h1>
+
+      <p class="hero-title fade-up delay-2">
+        Director of Engineering &nbsp;·&nbsp;
+        Data Platforms &nbsp;·&nbsp;
+        <strong>AI Transformation</strong> &nbsp;·&nbsp; Cloud Modernization
+      </p>
+
+      <p class="hero-summary fade-up delay-3">
+        Engineering leader with 18+ years building and scaling global organizations at
+        the intersection of data infrastructure, AI, and cloud platforms. Known for
+        translating ambiguous executive priorities into clear technology roadmaps —
+        and delivering measurable results at every level.
+      </p>
+
+      <div class="hero-ctas fade-up delay-4">
+        <a href="#work" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View Work
+        </a>
+        <a href="https://www.linkedin.com/in/sourabhvagrawal/" target="_blank" rel="noopener" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://drive.google.com/file/d/YOUR_RESUME_ID/view" target="_blank" rel="noopener" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          Resume PDF
+        </a>
+      </div>
+
+      <div class="hero-metrics fade-up delay-5">
+        <div class="hero-metric">
+          <span class="hero-metric-value">18<span style="font-size:1rem">+</span></span>
+          <span class="hero-metric-label">Years Engineering</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">$30M<span style="font-size:1rem">+</span></span>
+          <span class="hero-metric-label">Revenue Impact</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">$8M</span>
+          <span class="hero-metric-label">Budget Owned</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">30<span style="font-size:1rem">+</span></span>
+          <span class="hero-metric-label">Engineers Led</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">4×</span>
+          <span class="hero-metric-label">Org Growth</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">$1.9M<span style="font-size:1rem">+</span></span>
+          <span class="hero-metric-label">Annual Savings</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+  ============================================================ -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label fade-up">Who I am</p>
+      <h2 class="section-title fade-up delay-1">Builder. Leader. Transformer.</h2>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="about-grid">
+        <div class="about-text fade-up delay-2">
+          <p>
+            I'm a Director of Engineering who operates at the intersection of data infrastructure,
+            AI, and cloud modernization — bringing equal fluency to board-level strategy and
+            sprint-level execution. Over 18+ years I've built engineering organizations from the
+            ground up, scaled them 4× in 18 months, and personally driven $30M+ in documented
+            revenue impact across regulated healthcare, e-commerce, and enterprise SaaS.
+          </p>
+          <p>
+            My superpower is translating ambiguous executive priorities into clear technology
+            roadmaps with measurable OKRs. I build manager-of-managers operating models, develop
+            IC→EM pipelines, and champion AI-first engineering cultures — while simultaneously
+            owning P&amp;L, driving cost optimization, and ensuring HIPAA compliance in
+            high-stakes environments.
+          </p>
+          <p>
+            Based in Boston, MA and open to senior engineering leadership roles globally.
+          </p>
+
+          <div class="skills-cloud" style="margin-top:32px">
+            <p class="skills-cloud-title">Core capabilities</p>
+            <div class="tag-cloud">
+              <span class="tag">Org Scaling</span>
+              <span class="tag">Manager-of-Managers</span>
+              <span class="tag">OKR Design</span>
+              <span class="tag">Databricks</span>
+              <span class="tag">Palantir Foundry</span>
+              <span class="tag">AI Transformation</span>
+              <span class="tag">Cloud Modernization</span>
+              <span class="tag">Microservices</span>
+              <span class="tag">DORA Metrics</span>
+              <span class="tag">HIPAA Compliance</span>
+              <span class="tag">Executive Alignment</span>
+              <span class="tag">P&amp;L Ownership</span>
+              <span class="tag">AWS / Azure</span>
+              <span class="tag">CI/CD</span>
+              <span class="tag">Agile / Scrum</span>
+              <span class="tag">Digital Transformation</span>
+              <span class="tag">Data Governance</span>
+              <span class="tag">Vendor Negotiation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-up delay-3">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">18+</div>
+              <div class="stat-desc">Years in Software Engineering &amp; Leadership</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">$30M+</div>
+              <div class="stat-desc">Documented Revenue Impact</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">$8M</div>
+              <div class="stat-desc">Annual Engineering Budget Owned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">30+</div>
+              <div class="stat-desc">Engineers Led Across Distributed Teams</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">5+</div>
+              <div class="stat-desc">Engineering Managers &amp; Leaders Developed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">4×</div>
+              <div class="stat-desc">Org Growth in 18 Months</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">89%</div>
+              <div class="stat-desc">On-Time Feature Delivery (up from 58%)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">70%</div>
+              <div class="stat-desc">Reduction in Compliance Audit Findings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SELECTED WORK
+  ============================================================ -->
+  <section id="work">
+    <div class="container">
+      <p class="section-label fade-up">Selected Work</p>
+      <h2 class="section-title fade-up delay-1">High-Impact Initiatives</h2>
+      <p class="section-subtitle fade-up delay-2">A selection of transformative programs I've led — each with measurable business outcomes.</p>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="work-grid">
+
+        <!-- Card 1 -->
+        <div class="work-card fade-up delay-1">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">Legacy Integration Modernization</h3>
+          </div>
+          <p class="work-desc">
+            Architected a multi-year data modernization strategy consolidating 15+ legacy
+            integrations onto a Databricks Lakehouse platform — enabling same-day operational
+            decision-making for 2,000+ care coordinators across a $2B healthcare organization.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">⚡</span>
+            <span class="work-impact-text">$2.5M revenue stream · 18× faster insights · 3 days → 4 hours</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">Databricks</span>
+            <span class="work-tag">Data Lakehouse</span>
+            <span class="work-tag">AWS</span>
+            <span class="work-tag">Data Architecture</span>
+            <span class="work-tag">Healthcare</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="work-card fade-up delay-2">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">Palantir Foundry Enterprise Analytics Platform</h3>
+          </div>
+          <p class="work-desc">
+            Led enterprise-wide Palantir Foundry adoption across 5 internal teams and 3 vendor
+            partners — delivering 20+ production analytics pipelines that inform $5M+ in annual
+            supply chain optimization decisions and reduced manual reporting effort by 60%.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">📊</span>
+            <span class="work-impact-text">$5M+ annual supply chain decisions · 60% less manual reporting</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">Palantir Foundry</span>
+            <span class="work-tag">Analytics</span>
+            <span class="work-tag">Data Pipelines</span>
+            <span class="work-tag">Vendor Management</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="work-card fade-up delay-3">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">AI-First Engineering Culture &amp; Agentic Workflows</h3>
+          </div>
+          <p class="work-desc">
+            Championed an AI-first engineering culture with agentic workflows and developer
+            co-pilots across all 3 teams. The program was adopted as the enterprise-wide AI
+            tooling standard across 200+ employees.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">🤖</span>
+            <span class="work-impact-text">30% velocity increase · 25% faster delivery cycles · Enterprise-wide adoption</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">AI / LLMs</span>
+            <span class="work-tag">Agentic Workflows</span>
+            <span class="work-tag">Developer Tooling</span>
+            <span class="work-tag">Engineering Culture</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="work-card fade-up delay-1">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">Global Cloud Call-Center Platform Rollout</h3>
+          </div>
+          <p class="work-desc">
+            Directed global rollout of a cloud call-center platform across 4 international
+            markets — delivered on schedule and 8% under budget, improving CSAT scores by 29%
+            and directly enabling expansion into 2 new geographies.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">🌍</span>
+            <span class="work-impact-text">29% CSAT improvement · 21% cost reduction · 2 new markets unlocked</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">Cloud Platform</span>
+            <span class="work-tag">Call Center</span>
+            <span class="work-tag">Global Rollout</span>
+            <span class="work-tag">E-commerce</span>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="work-card fade-up delay-2">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">Supply Chain Platform — Monolith to Microservices</h3>
+          </div>
+          <p class="work-desc">
+            Led architecture modernization of the core supply chain platform from monolith to
+            microservices using Agile delivery and CI/CD pipelines — enabling independent team
+            deployment cadences and reducing mean-time-to-deploy from 14 days to less than 1 day.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">🚀</span>
+            <span class="work-impact-text">12× deployment frequency · 14 days → &lt;1 day deploy time</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">Microservices</span>
+            <span class="work-tag">CI/CD</span>
+            <span class="work-tag">Agile</span>
+            <span class="work-tag">DevOps</span>
+            <span class="work-tag">Supply Chain</span>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="work-card fade-up delay-3">
+          <div class="work-card-header">
+            <div class="work-company-row">
+            </div>
+            <h3 class="work-title">Cross-Platform Loyalty Program</h3>
+          </div>
+          <p class="work-desc">
+            Co-architected a cross-platform loyalty program spanning e-commerce and POS systems
+            across 4 engineering teams — launched on time and became the highest-ROI platform
+            investment in company history.
+          </p>
+          <div class="work-impact">
+            <span class="work-impact-icon">💰</span>
+            <span class="work-impact-text">$22M first-year revenue · Highest-ROI platform in company history</span>
+          </div>
+          <div class="work-tags">
+            <span class="work-tag">E-commerce</span>
+            <span class="work-tag">POS Integration</span>
+            <span class="work-tag">Loyalty Platform</span>
+            <span class="work-tag">Retail Tech</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TIMELINE
+  ============================================================ -->
+  <section id="timeline">
+    <div class="container">
+      <p class="section-label fade-up">Career Timeline</p>
+      <h2 class="section-title fade-up delay-1">Experience &amp; Education</h2>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="timeline">
+
+        <div class="timeline-item fade-up delay-1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-meta">
+            <span class="timeline-company">Bayada Home Health Care</span>
+          </div>
+          <div class="timeline-role">Director of Engineering — Platform Integration &amp; Data Engineering</div>
+          <p class="timeline-desc">
+            Healthcare (~$2B revenue) · 24-person org · Pennsauken, NJ · Reporting to CTO
+          </p>
+          <div class="timeline-highlights">
+            <span class="timeline-highlight">Built and led a high-performing 24-person engineering organization across 3 domains: Integration, Data, and AI — developing 3 Engineering Managers in a tiered leadership model</span>
+            <span class="timeline-highlight">Secured $8M+ in capital funding for enterprise-wide modernization by presenting the 3-year digital transformation roadmap to executive stakeholders</span>
+            <span class="timeline-highlight">Consolidated 15+ legacy integrations onto Databricks Lakehouse, creating a $2.5M revenue stream and cutting time-to-insight 18×</span>
+            <span class="timeline-highlight">Defined enterprise data governance strategy — achieved zero HIPAA incidents over a 12-month audit period and reduced compliance findings by 70% YoY</span>
+            <span class="timeline-highlight">Directed cloud-native infra migration reducing annual costs by ~$300K; delivered $650K+ in savings on an $8M budget (60% over the $400K target)</span>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-up delay-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-meta">
+            <span class="timeline-company">Fusion Worldwide</span>
+          </div>
+          <div class="timeline-role">Engineering Manager</div>
+          <p class="timeline-desc">
+            E-commerce · Supply Chain &amp; Manufacturing · Boston, MA · Reporting to CTO
+          </p>
+          <div class="timeline-highlights">
+            <span class="timeline-highlight">Rebuilt engineering org from 4 to 16 engineers in 18 months — 75% internal promotion rate, zero regrettable attrition during growth phase</span>
+            <span class="timeline-highlight">Co-defined 3-year technology roadmap with Product and Sales — directly contributed to 2 enterprise wins representing $3M+ combined ARR</span>
+            <span class="timeline-highlight">Led global call-center rollout across 4 international markets, delivered on schedule and 8% under budget</span>
+            <span class="timeline-highlight">Modernized supply chain platform from monolith to microservices — 12× deployment frequency, 14 days → &lt;1 day deploy</span>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-up delay-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-meta">
+            <span class="timeline-company">Vantage Deluxe World Travel</span>
+          </div>
+          <div class="timeline-role">Engineering Manager / Principal Software Engineer</div>
+          <p class="timeline-desc">
+            Hospitality &amp; Travel · Boston, MA · Promoted to EM 2016
+          </p>
+          <div class="timeline-highlights">
+            <span class="timeline-highlight">Oversaw concurrent development of 4 software products across ~30 engineers in distributed teams — improved on-time delivery by 30%</span>
+            <span class="timeline-highlight">Championed overhaul of the Costing &amp; PO Management System — eliminated 3,000+ manual operations hours/month ($1.8M annualized savings)</span>
+            <span class="timeline-highlight">Introduced definition-of-done standards and incident management processes — reduced production incidents by 45% over 2 years</span>
+            <span class="timeline-highlight">Designed structured performance management: bi-annual calibration cycles, promoted 4 engineers, zero regrettable departures over 6 years</span>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-up delay-4">
+          <div class="timeline-dot"></div>
+          <div class="timeline-meta">
+            <span class="timeline-company">Wolverine Worldwide</span>
+          </div>
+          <div class="timeline-role">Senior Software Engineer</div>
+          <p class="timeline-desc">
+            Retail &amp; E-commerce · Waltham, MA
+          </p>
+          <div class="timeline-highlights">
+            <span class="timeline-highlight">Co-architected a cross-platform loyalty program spanning e-commerce and POS across 4 engineering teams — $22M first-year revenue, highest-ROI investment in company history</span>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-up delay-5">
+          <div class="timeline-dot" style="border-color:#a78bfa"></div>
+          <div class="timeline-meta">
+            <span class="timeline-company" style="color:#a78bfa">University of North Texas</span>
+            <span class="timeline-type type-edu">Education</span>
+          </div>
+          <div class="timeline-role">M.S. Computer Science</div>
+          <p class="timeline-desc">
+            National Science Foundation Research Scholarship — selected from 540 engineering candidates
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS
+  ============================================================ -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label fade-up">Expertise</p>
+      <h2 class="section-title fade-up delay-1">Skills &amp; Capabilities</h2>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="skills-grid">
+
+        <div class="skill-group fade-up delay-1">
+          <div class="skill-group-icon">👥</div>
+          <div class="skill-group-name">People &amp; Leadership</div>
+          <div class="skill-pills">
+            <span class="tag">Org Scaling</span>
+            <span class="tag">Manager-of-Managers</span>
+            <span class="tag">IC → EM Pipeline</span>
+            <span class="tag">Career Frameworks</span>
+            <span class="tag">Talent Acquisition</span>
+            <span class="tag">Headcount Planning</span>
+            <span class="tag">Performance Calibration</span>
+            <span class="tag">Coaching &amp; Mentoring</span>
+            <span class="tag">Remote Teams</span>
+            <span class="tag">Engineering Culture</span>
+          </div>
+        </div>
+
+        <div class="skill-group fade-up delay-2">
+          <div class="skill-group-icon">🗺️</div>
+          <div class="skill-group-name">Strategy &amp; Execution</div>
+          <div class="skill-pills">
+            <span class="tag">Technology Roadmapping</span>
+            <span class="tag">OKR Design &amp; Tracking</span>
+            <span class="tag">Executive Alignment</span>
+            <span class="tag">Digital Transformation</span>
+            <span class="tag">Change Management</span>
+            <span class="tag">Agile / Scrum</span>
+            <span class="tag">DORA Metrics</span>
+            <span class="tag">Vendor Negotiation</span>
+            <span class="tag">3-Year Planning</span>
+          </div>
+        </div>
+
+        <div class="skill-group fade-up delay-3">
+          <div class="skill-group-icon">🤖</div>
+          <div class="skill-group-name">Data &amp; AI Platforms</div>
+          <div class="skill-pills">
+            <span class="tag">Databricks</span>
+            <span class="tag">Palantir Foundry</span>
+            <span class="tag">Data Lakehouse</span>
+            <span class="tag">AI / ML Pipelines</span>
+            <span class="tag">Agentic Workflows</span>
+            <span class="tag">Data Architecture</span>
+            <span class="tag">Data Governance</span>
+            <span class="tag">Event-Driven Architecture</span>
+            <span class="tag">Enterprise Integration</span>
+          </div>
+        </div>
+
+        <div class="skill-group fade-up delay-4">
+          <div class="skill-group-icon">☁️</div>
+          <div class="skill-group-name">Cloud &amp; Infrastructure</div>
+          <div class="skill-pills">
+            <span class="tag">AWS</span>
+            <span class="tag">Azure</span>
+            <span class="tag">Microservices</span>
+            <span class="tag">CI/CD Pipelines</span>
+            <span class="tag">DevOps</span>
+            <span class="tag">Cloud Modernization</span>
+            <span class="tag">System Design</span>
+            <span class="tag">Technical Debt Mgmt</span>
+            <span class="tag">Architecture Review</span>
+          </div>
+        </div>
+
+        <div class="skill-group fade-up delay-1">
+          <div class="skill-group-icon">💼</div>
+          <div class="skill-group-name">Business &amp; Compliance</div>
+          <div class="skill-pills">
+            <span class="tag">P&amp;L Ownership</span>
+            <span class="tag">Budget Management</span>
+            <span class="tag">Cost Optimization</span>
+            <span class="tag">HIPAA Compliance</span>
+            <span class="tag">Regulatory Governance</span>
+            <span class="tag">SLA / SLO Oversight</span>
+            <span class="tag">Program Governance</span>
+            <span class="tag">Cross-Functional Mgmt</span>
+            <span class="tag">SaaS</span>
+          </div>
+        </div>
+
+        <div class="skill-group fade-up delay-2">
+          <div class="skill-group-icon">🏭</div>
+          <div class="skill-group-name">Industry Experience</div>
+          <div class="skill-pills">
+            <span class="tag">Healthcare ($2B)</span>
+            <span class="tag">E-commerce</span>
+            <span class="tag">Supply Chain</span>
+            <span class="tag">Hospitality &amp; Travel</span>
+            <span class="tag">Retail / Loyalty</span>
+            <span class="tag">Enterprise SaaS</span>
+            <span class="tag">Regulated Industries</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CERTIFICATIONS
+  ============================================================ -->
+  <section id="certifications">
+    <div class="container">
+      <p class="section-label fade-up">Credentials</p>
+      <h2 class="section-title fade-up delay-1">Certifications &amp; Awards</h2>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="cert-grid">
+
+        <div class="cert-card fade-up delay-1">
+          <div class="cert-num">PMP</div>
+          <div class="cert-info">
+            <div class="cert-name">Project Management Professional (PMP)</div>
+            <div class="cert-issuer">Issued by <strong>Project Management Institute</strong></div>
+          </div>
+        </div>
+
+        <div class="cert-card fade-up delay-2">
+          <div class="cert-num">🎓</div>
+          <div class="cert-info">
+            <div class="cert-name">National Science Foundation Research Scholarship</div>
+            <div class="cert-issuer">Selected from <strong>540 engineering candidates</strong> · University of North Texas, 2008</div>
+          </div>
+        </div>
+
+        <div class="cert-card fade-up delay-3">
+          <div class="cert-num">M.S.</div>
+          <div class="cert-info">
+            <div class="cert-name">Master of Science, Computer Science</div>
+            <div class="cert-issuer"><strong>University of North Texas</strong> · Dec 2008</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+  <section id="contact">
+    <div class="container">
+      <p class="section-label fade-up">Get in Touch</p>
+      <h2 class="section-title fade-up delay-1">Let's Connect</h2>
+      <div class="section-divider fade-up delay-2"></div>
+
+      <div class="contact-wrap">
+        <div class="contact-intro fade-up delay-2">
+          <p>
+            I'm a senior engineering leader based in <strong style="color:var(--accent)">Boston, MA</strong>
+            with 18+ years of experience building high-performing teams and driving transformative
+            outcomes in data, AI, and cloud engineering.
+          </p>
+          <p>
+            Whether you're looking for a Director of Engineering to lead platform modernization,
+            scale an engineering org, or drive a data &amp; AI transformation — I'd love to talk.
+          </p>
+
+          <div class="open-to">
+            <div class="open-to-title">Currently Open To</div>
+            <ul>
+              <li>Director / VP of Engineering roles</li>
+              <li>Data Platform &amp; AI leadership positions</li>
+              <li>Cloud modernization &amp; digital transformation programs</li>
+              <li>Regulated industries: Healthcare, FinTech, Enterprise SaaS</li>
+              <li>Advisory and fractional CTO engagements</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="contact-links fade-up delay-3">
+          <a href="mailto:agarawal.sourabh@gmail.com" class="contact-card">
+            <div class="contact-card-icon">✉️</div>
+            <div class="contact-card-info">
+              <div class="contact-card-label">Email</div>
+              <div class="contact-card-value">agarawal.sourabh@gmail.com</div>
+            </div>
+            <span class="contact-card-arrow">→</span>
+          </a>
+
+          <a href="https://www.linkedin.com/in/sourabhvagrawal/" target="_blank" rel="noopener" class="contact-card">
+            <div class="contact-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent)"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </div>
+            <div class="contact-card-info">
+              <div class="contact-card-label">LinkedIn</div>
+              <div class="contact-card-value">LinkedIn</div>
+            </div>
+            <span class="contact-card-arrow">→</span>
+          </a>
+
+<div class="contact-card" style="cursor:default">
+            <div class="contact-card-icon">📍</div>
+            <div class="contact-card-info">
+              <div class="contact-card-label">Location</div>
+              <div class="contact-card-value">Boston, MA (Open to Remote)</div>
+            </div>
+          </div>
+
+          <div class="contact-card" style="cursor:default">
+            <div class="contact-card-icon">📞</div>
+            <div class="contact-card-info">
+              <div class="contact-card-label">Phone</div>
+              <div class="contact-card-value">(603) 324-9976</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-name">Sourabh Agrawal</div>
+      <div class="footer-copy">© 2025 · Director of Engineering</div>
+      <div class="footer-location">
+        <span>📍</span> Boston, MA
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    // ── Theme Toggle ──────────────────────────────────────────────
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    let isDark = true;
+
+    function setTheme(dark) {
+      isDark = dark;
+      html.setAttribute('data-theme', dark ? 'dark' : 'light');
+      themeToggle.textContent = dark ? '☀️' : '🌙';
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    }
+
+    // Restore saved theme
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved === 'dark');
+
+    themeToggle.addEventListener('click', () => setTheme(!isDark));
+
+    // ── Hamburger ─────────────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+      });
+    });
+
+    // ── Intersection Observer — Fade-up animations ─────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Active nav link on scroll ─────────────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach(link => {
+            link.style.color = link.getAttribute('href') === `#${id}`
+              ? 'var(--accent)' : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => sectionObserver.observe(s));
+
+    // ── Navbar scroll shadow ──────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.style.boxShadow = window.scrollY > 20
+        ? '0 4px 32px rgba(0,0,0,.3)' : '';
+    }, { passive: true });
+  </script>
+</body>
+</html>
