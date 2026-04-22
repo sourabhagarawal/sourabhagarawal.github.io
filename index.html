@@ -919,6 +919,19 @@
     }
 
     /* =========================================================
+       Particle canvas
+    ========================================================= */
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #hero .hero-inner { position: relative; z-index: 1; }
+
+    /* =========================================================
        Counter animation
     ========================================================= */
     .count-up { display: inline-block; }
@@ -961,6 +974,7 @@
        HERO
   ============================================================ -->
   <section id="hero">
+    <canvas id="particle-canvas"></canvas>
     <div class="hero-inner">
 <h1 class="hero-name fade-up delay-1">
         Sourabh<br><span class="accent">Agrawal</span>
@@ -1612,6 +1626,83 @@
        JAVASCRIPT
   ============================================================ -->
   <script>
+    // ── Particle Network Animation ────────────────────────────────
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      const PARTICLE_COUNT = 72;
+      const MAX_DIST = 140;
+      const SPEED = 0.4;
+      let particles = [];
+      let W, H;
+
+      function resize() {
+        const hero = document.getElementById('hero');
+        W = canvas.width = hero.offsetWidth;
+        H = canvas.height = hero.offsetHeight;
+      }
+
+      function mkParticle() {
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * SPEED * 2,
+          vy: (Math.random() - 0.5) * SPEED * 2,
+          r: Math.random() * 2 + 1.2,
+        };
+      }
+
+      function init() {
+        resize();
+        particles = Array.from({ length: PARTICLE_COUNT }, mkParticle);
+      }
+
+      function getAccentColor() {
+        return getComputedStyle(document.documentElement)
+          .getPropertyValue('--accent').trim() || '#38bdf8';
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const accent = getAccentColor();
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = accent;
+          ctx.globalAlpha = 0.7;
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const q = particles[j];
+            const dx = p.x - q.x, dy = p.y - q.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MAX_DIST) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.strokeStyle = accent;
+              ctx.globalAlpha = (1 - dist / MAX_DIST) * 0.25;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); });
+      init();
+      draw();
+    })();
+
     // ── Theme Toggle ──────────────────────────────────────────────
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
