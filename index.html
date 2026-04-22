@@ -982,8 +982,7 @@
 
       <p class="hero-title fade-up delay-2">
         Director of Engineering &nbsp;·&nbsp;
-        Data Platforms &nbsp;·&nbsp;
-        <strong>AI Transformation</strong> &nbsp;·&nbsp; Cloud Modernization
+        <span id="typewriter" style="color:var(--accent);font-weight:600;border-right:2px solid var(--accent);padding-right:3px"></span>
       </p>
 
       <p class="hero-summary fade-up delay-3">
@@ -1626,6 +1625,32 @@
        JAVASCRIPT
   ============================================================ -->
   <script>
+    // ── Typewriter Animation ──────────────────────────────────────
+    (function () {
+      const words = [
+        'AI Transformation',
+        'Data Platforms',
+        'Cloud Modernization',
+        'Engineering Leadership',
+        'Platform Architecture',
+        'Digital Transformation',
+      ];
+      const el = document.getElementById('typewriter');
+      let wi = 0, ci = 0, deleting = false;
+
+      function tick() {
+        const word = words[wi];
+        el.textContent = deleting ? word.substring(0, ci--) : word.substring(0, ci++);
+
+        let delay = deleting ? 45 : 90;
+        if (!deleting && ci === word.length + 1) { delay = 1800; deleting = true; }
+        else if (deleting && ci === 0) { deleting = false; wi = (wi + 1) % words.length; delay = 400; }
+
+        setTimeout(tick, delay);
+      }
+      setTimeout(tick, 800);
+    })();
+
     // ── Particle Network Animation ────────────────────────────────
     (function () {
       const canvas = document.getElementById('particle-canvas');
